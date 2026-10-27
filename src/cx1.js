@@ -1,0 +1,97 @@
+
+const CXM={surf:'Derivatives and gradients',dint:'Double integrals',vec2:'Vector fields in the plane',vec3:'Vector fields in space',para:'Surfaces and shape tools',map:'Maps and Jacobians',air:'Airflow and lift',vol:'Triple integrals and solids'};
+const CXL={ck:{},t:0,fc:0,objs:null,np:0,mvis:true,mk:'',sig:'',cache:{},wa:0,ws:0,sw:0,err:{},parts:null,mfig:''};
+const CXH=()=>EQHD;
+function cxDef(){return {mode:'surf',
+ fs:'peaks',fe:'',fp:'',R:3,zs:1,res:84,px:.45,py:-.7,ang:30,spin:true,tan:true,trc:true,dtr:true,grad:true,cont:true,floor:true,asc:false,crit:true,cby:'h',
+ lag:false,con:'circle',ca:1.6,cb:1,ccx:0,ccy:0,walk:true,
+ reg:'disk',rr:2,rr2:.8,coord:'cart',n:12,rule:'mid',refine:false,wire:true,fub:true,
+ v2:'rot',v2P:'',v2Q:'',arrows:true,np:700,trl:1,strm:false,col:'curl',lift:0,cur:'circle',cr:1.4,cr2:.9,cux:0,cuy:0,iv:'circ',tiles:false,wheel:true,
+ v3:'helix',v3P:'',v3Q:'',v3R:'',an:6,np3:900,sf:'sphere',sr:1.3,sx0:0,sy0:0,sz0:0,fluxOn:true,stk:false,lr:1.2,lti:25,ltu:30,bulge:.6,slz:0,slp:'xy',csh:'div',
+ ps:'torus',psx:'',psy:'',psz:'',psu:'0, 2pi',psv:'0, 2pi',pres:72,tw:0,bend:0,pin:0,inf:0,sx:1,sy:1,sz:1,shr:0,wav:0,wfr:3,rx:0,ry:0,rz:0,mir:false,flip:false,inv:0,unw:0,morph:1,breathe:false,pcol:'K',uv:true,nrm:false,pu:.3,pw:.4,
+ mp:'jouk',mw:'',mu:'',mv:'',mk:'c',mt:1,manim:true,minv:false,mgr:18,msh:'circle',mx0:-.1,my0:.12,mr:1.12,mcol:'jac',mlift:0,
+ af:'camber',V:1,al:6,eps:.1,cam:.1,kut:true,G:0,stl:true,apart:true,acol:'cp',loop:true,wing:true,plift:.35,
+ sol:'ball',rho:'one',re:'',vco:'cart',vn:10,vdim:3,sweep:true,vw:0,vpl:'xy',vcut:.5,
+ hf:'s3',he:'',hc:1,hw:0,hwm:1.15,hsw:true,hres:26,hcol:'fw',hin:false,hgr:true,pz:0,v4:'src4',v4P:'',v4Q:'',v4R:'',v4S:'',v4b:'ball',v4a:1,an4:6,np4:700,crd:'cart',
+ prm:{},rate:1,pwk:true,svm:{},cpl:'yz',cpos:0,cin3:true,csw:false}}
+function cxOk(){const d=cxDef();if(!st.cx||typeof st.cx!=='object'){st.cx=d;return}for(const k in d){if(typeof st.cx[k]!==typeof d[k]){st.cx[k]=d[k]}}if(!CXM[st.cx.mode]){st.cx.mode='surf'}if(!st.cx.prm||typeof st.cx.prm!=='object'){st.cx.prm={}}}
+const CXEDIT={};
+function cxComp(src,vars,outs,cplx){src=cxPolPre(src,vars);const key=vars.join()+'|'+outs.join()+'|'+(cplx?1:0)+'|'+src;let r=CXL.ck[key];if(r){return r}
+ try{const L=eqClassify(src),res=new Set([...vars,...outs,'t']),P=eqParams(L,res),fs={},rg={};
+  if(cplx){const e=L.find(q=>q.k==='def'&&outs.includes(q.n));if(!e){throw EQER('write  w = …  using z',0)}const dm={};L.filter(q=>q.k==='def'&&!q.param&&q!==e).forEach(q=>{dm[q.n]=q});
+   const C={n:0,code:'',memo:{},isReal:n=>P.pk[n]!==undefined,v:n=>n==='x'?'zr':n==='y'?'zi':n==='t'?'t':P.pk[n]!==undefined?'P['+P.pk[n]+']':EQK[n]||null,known:()=>new Set(['z','x','y','t','i',...P.ps.map(p=>p.n),...Object.keys(dm),...Object.keys(EQK)]),cdef:(n,C2)=>{if(!dm[n]){return null}if(!C2){return true}if(!C.memo[n]){C.memo[n]=[0,0];try{C.memo[n]=eqGenC(dm[n].ast,C)}catch(err){throw eqLn(err,dm[n].ln)}}return C.memo[n]}};
+   let out;try{out=eqGenC(e.ast,C)}catch(err){throw eqLn(err,e.ln)}fs.w=eqFn(['zr','zi','t','P','H','O'],C.code+'O[0]='+out[0]+';O[1]='+out[1]+';')}
+  else{const map={t:'t'};for(const v of vars){map[v]=v}const {C}=eqDefs(L,map,P,new Set(outs));let any=false;for(const n of outs){const e=L.find(q=>q.k==='def'&&q.n===n);fs[n]=e?eqFn([...vars,'t','P','H'],'return +('+eqG(e.ast,C,e.ln)+')'):null;if(e){any=true}}if(!any){throw EQER('write  '+outs[0]+' = …',0)}}
+  const C0=eqCtx({},P);for(const e of L){if(e.k==='rg'){rg[e.n]=[eqFn(['P','H'],'return +('+eqG(e.a,C0,e.ln)+')'),eqFn(['P','H'],'return +('+eqG(e.b,C0,e.ln)+')')]}}
+  r={fs,rg,ps:P.ps,pk:P.pk,src,uT:/\bt\b/.test(src.replace(/\b(tan|sqrt|atan2?|tanh|abs|exp|step|cot|tau)\b/g,''))};
+ }catch(err){r={err:err&&err.eqe?err.msg:String(err&&err.message||err)}}
+ CXL.ck[key]=r;return r}
+function cxPv(c){if(!c||c.err){return null}let a=c._P;if(!a||a.length!==c.ps.length){a=c._P=new Float64Array(c.ps.length)}const m=st.cx.prm;c.ps.forEach((p,i)=>{const v=m[p.n];a[i]=isFinite(v)?v:p.v});return a}
+function cxSrc(pre,lines){return (pre||'').split(/[;\n]/).map(s=>s.trim()).filter(Boolean).concat(lines).join('\n')}
+const cxW=x=>x*CXH()/st.cx.R;
+const cxRGB=(t,o)=>eqCm(null,t,o||[0,0,0]),cxDiv=(t,o)=>eqCm('div',clamp(t,-1,1),o||[0,0,0]);
+const CXLD=[.38,.3,.87];
+function cxShd(nx,ny,nz){const l=Math.hypot(nx,ny,nz)||1;return .34+.66*Math.abs((nx*CXLD[0]+ny*CXLD[1]+nz*CXLD[2])/l)}
+function cxObjs(){if(CXL.objs||!GL){return CXL.objs}const mx=30000,g=new THREE.BufferGeometry(),pos=new Float32Array(mx*3),col=new Float32Array(mx*3),sz=new Float32Array(mx);g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('col',new THREE.BufferAttribute(col,3));g.setAttribute('sz',new THREE.BufferAttribute(sz,1));g.setDrawRange(0,0);
+ const mat=new THREE.ShaderMaterial({uniforms:{scale:{value:300}},vertexShader:'uniform float scale;attribute float sz;attribute vec3 col;varying vec3 vC;void main(){vC=col;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=max(1.,sz*scale/-mv.z);gl_Position=projectionMatrix*mv;}',fragmentShader:'varying vec3 vC;void main(){vec2 p=gl_PointCoord-.5;float r=dot(p,p)*4.;if(r>1.){discard;}float a=exp(-r*6.)+.3*exp(-r*2.);gl_FragColor=vec4(vC*a,1.);}',transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
+ const pts=new THREE.Points(g,mat);pts.frustumCulled=false;GL.sc.add(pts);
+ const ln=dyn('seg',160000,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.95,depthWrite:false}));GL.sc.add(ln.o);
+ const gl2=dyn('seg',90000,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.42,depthWrite:false}));GL.sc.add(gl2.o);
+ const ad=dyn('seg',120000,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.9,depthWrite:false,blending:THREE.AdditiveBlending}));GL.sc.add(ad.o);ad.o.userData.lwf=.8;
+ const ov=dyn('seg',40000,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.4,depthTest:false,depthWrite:false}));ov.o.renderOrder=20;GL.sc.add(ov.o);
+ const TM=240000,tg=new THREE.BufferGeometry(),tp=new Float32Array(TM*3),tc=new Float32Array(TM*3);tg.setAttribute('position',new THREE.BufferAttribute(tp,3));tg.setAttribute('color',new THREE.BufferAttribute(tc,3));tg.setDrawRange(0,0);const tm=new THREE.Mesh(tg,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:1.5,polygonOffsetUnits:2}));tm.frustumCulled=false;GL.sc.add(tm);
+ CXL.objs={pts,g,pos,col,sz,mat,ln,gl:gl2,ad,ov,tri:{mesh:tm,g:tg,p:tp,c:tc,n:0,max:TM},gm:{}};return CXL.objs}
+function cxHide(){const O=CXL.objs;if(!O){return}O.pts.visible=false;O.ln.o.visible=false;O.gl.o.visible=false;O.ad.o.visible=false;O.ov.o.visible=false;O.tri.mesh.visible=false;for(const k in O.gm){O.gm[k].mesh.visible=false}}
+function cxGM(slot,M,N,op){const O=CXL.objs,key=M+'x'+N;let m=O.gm[slot];if(m&&m.key===key){return m}if(m){GL.sc.remove(m.mesh);m.mesh.geometry.dispose()}const g=new THREE.BufferGeometry(),p=new Float32Array(M*N*3),c=new Float32Array(M*N*3),idx=new Uint32Array((M-1)*(N-1)*6);let q=0;for(let j=0;j<N-1;j++){for(let i=0;i<M-1;i++){const a=j*M+i,b=a+1,cc=a+M,d=cc+1;idx[q++]=a;idx[q++]=b;idx[q++]=d;idx[q++]=a;idx[q++]=d;idx[q++]=cc}}g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('color',new THREE.BufferAttribute(c,3));g.setIndex(new THREE.BufferAttribute(idx,1));
+ const tr=op!==undefined&&op<1,mesh=new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:tr,opacity:tr?op:1,depthWrite:!tr,polygonOffset:true,polygonOffsetFactor:1.5,polygonOffsetUnits:2}));mesh.frustumCulled=false;mesh.renderOrder=tr?2:0;GL.sc.add(mesh);m={key,mesh,p,c,M,N};O.gm[slot]=m;return m}
+function cxGMup(m){nu(m.mesh.geometry.attributes.position,m.M*m.N*3);nu(m.mesh.geometry.attributes.color,m.M*m.N*3);m.mesh.geometry.computeBoundingSphere();m.mesh.visible=true}
+function cxGMshade(m){const M=m.M,N=m.N,p=m.p,c=m.c;for(let j=0;j<N;j++){for(let i=0;i<M;i++){const q=j*M+i,a=j*M+Math.min(M-1,i+1),b=j*M+Math.max(0,i-1),e=Math.min(N-1,j+1)*M+i,f=Math.max(0,j-1)*M+i,ux=p[3*a]-p[3*b],uy=p[3*a+1]-p[3*b+1],uz=p[3*a+2]-p[3*b+2],vx=p[3*e]-p[3*f],vy=p[3*e+1]-p[3*f+1],vz=p[3*e+2]-p[3*f+2],s=cxShd(uy*vz-uz*vy,uz*vx-ux*vz,ux*vy-uy*vx);c[3*q]*=s;c[3*q+1]*=s;c[3*q+2]*=s}}}
+function cxPt(x,y,z,r,g,b,s){const O=CXL.objs,i=CXL.np;if(i>=O.sz.length){return}O.pos[3*i]=x;O.pos[3*i+1]=y;O.pos[3*i+2]=z;O.col[3*i]=r;O.col[3*i+1]=g;O.col[3*i+2]=b;O.sz[i]=s;CXL.np++}
+function cxPtsEnd(){const O=CXL.objs,n=CXL.np;O.g.setDrawRange(0,n);nu(O.g.attributes.position,n*3);nu(O.g.attributes.col,n*3);nu(O.g.attributes.sz,n);O.pts.visible=n>0}
+const cxSeg=(L,a,b,c,d,e,f,r,g,h)=>{L.put(a,b,c,r,g,h);L.put(d,e,f,r,g,h)};
+function cxArr(L,p,v,c,hs){const l=Math.hypot(v[0],v[1],v[2]);if(!(l>1e-9)){return}const q=[p[0]+v[0],p[1]+v[1],p[2]+v[2]];cxSeg(L,p[0],p[1],p[2],q[0],q[1],q[2],c[0],c[1],c[2]);const u=v.map(x=>x/l);let w=Math.abs(u[2])<.9?[u[1],-u[0],0]:[0,u[2],-u[1]];const wl=Math.hypot(...w)||1;w=w.map(x=>x/wl);const w2=[u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0]],h=Math.min(l*.35,(hs||.09));for(const W of [w,w2]){for(const s of [1,-1]){cxSeg(L,q[0],q[1],q[2],q[0]-u[0]*h+W[0]*h*.45*s,q[1]-u[1]*h+W[1]*h*.45*s,q[2]-u[2]*h+W[2]*h*.45*s,c[0],c[1],c[2])}}}
+function cxArrX(L,p,v,c,hs){cxArr(L,p,v,c,hs);const O=CXL.objs;if(O&&O.ov){cxArr(O.ov,p,v,c,hs)}}
+function cxSegX(L,a,b,c,d,e,f,r,g,h){cxSeg(L,a,b,c,d,e,f,r,g,h);const O=CXL.objs;if(O&&O.ov){cxSeg(O.ov,a,b,c,d,e,f,r,g,h)}}
+function cxTri(a,b,c,col){const T=CXL.objs.tri;if(T.n+3>T.max){return}for(const v of [a,b,c]){const i=3*T.n;T.p[i]=v[0];T.p[i+1]=v[1];T.p[i+2]=v[2];T.c[i]=col[0];T.c[i+1]=col[1];T.c[i+2]=col[2];T.n++}}
+function cxQuad(a,b,c,d,col){cxTri(a,b,c,col);cxTri(a,c,d,col)}
+function cxTriEnd(){const T=CXL.objs.tri;T.g.setDrawRange(0,T.n);nu(T.g.attributes.position,T.n*3);nu(T.g.attributes.color,T.n*3);T.g.computeBoundingSphere();T.mesh.visible=T.n>0}
+function cxPrism(B,z0,z1,col){const k=CXH()/st.cx.R,P=B.map(q=>[q[0]*k,q[1]*k]),lo=Math.min(z0,z1),hi=Math.max(z0,z1),top=col,sd=[col[0]*.62,col[1]*.62,col[2]*.62],sd2=[col[0]*.45,col[1]*.45,col[2]*.45];cxQuad([P[0][0],P[0][1],hi],[P[1][0],P[1][1],hi],[P[2][0],P[2][1],hi],[P[3][0],P[3][1],hi],top);for(let i=0;i<4;i++){const a=P[i],b=P[(i+1)%4];cxQuad([a[0],a[1],lo],[b[0],b[1],lo],[b[0],b[1],hi],[a[0],a[1],hi],i%2?sd:sd2)}}
+const CXMS=[[],[3,0],[0,1],[3,1],[1,2],[3,0,1,2],[0,2],[3,2],[2,3],[0,2],[0,1,2,3],[1,2],[1,3],[0,1],[0,3],[]];
+function cxCont(A,N,M,xa,xb,ya,yb,lev,out){const dx=(xb-xa)/(N-1),dy=(yb-ya)/(M-1);for(let j=0;j<M-1;j++){for(let i=0;i<N-1;i++){const a=A[j*N+i]-lev,b=A[j*N+i+1]-lev,c=A[(j+1)*N+i+1]-lev,d=A[(j+1)*N+i]-lev;if(!(isFinite(a)&&isFinite(b)&&isFinite(c)&&isFinite(d))){continue}const k=(a>0?1:0)|(b>0?2:0)|(c>0?4:0)|(d>0?8:0);if(k===0||k===15){continue}const x0=xa+i*dx,y0=ya+j*dy,e=n=>n===0?[x0+a/(a-b)*dx,y0]:n===1?[x0+dx,y0+b/(b-c)*dy]:n===2?[x0+d/(d-c)*dx,y0+dy]:[x0,y0+a/(a-d)*dy],T=CXMS[k];for(let q=0;q<T.length;q+=2){const p=e(T[q]),r=e(T[q+1]);out.push(p[0],p[1],r[0],r[1])}}}return out}
+function cxLevels(lo,hi,n){const o=[];if(!(hi>lo)){return o}for(let i=1;i<n;i++){o.push(lo+(hi-lo)*i/n)}return o}
+function cxQLev(Z,lo,hi,n){const B=[];for(let i=0;i<Z.length;i+=3){if(isFinite(Z[i])){B.push(Z[i])}}const L=cxLevels(lo,hi,n);if(B.length<16||!(hi>lo)){return L}B.sort((a,b)=>a-b);const o=[];for(let i=1;i<n;i++){const v=.5*B[Math.floor(i/n*(B.length-1))]+.5*L[i-1];if(!o.length||v-o[o.length-1]>(hi-lo)*.012){o.push(v)}}return o}
+function cxImg(slot,N,M,key,fill){const C=CXL.cache;let o=C['img'+slot];if(!o){o=C['img'+slot]={cv:document.createElement('canvas'),key:''}}if(o.key===key&&o.cv.width===N&&o.cv.height===M){return o.cv}o.key=key;o.cv.width=N;o.cv.height=M;const x=o.cv.getContext('2d'),im=x.createImageData(N,M);fill(im.data,N,M);x.putImageData(im,0,0);return o.cv}
+function cxPG(){const ml=34,mr=10,top=24,mb=20,s=Math.max(20,Math.min(WP-ml-mr,HP-top-mb));return {x0:ml+(WP-ml-mr-s)/2,y0:top,s}}
+function cxView(G,xa,xb,ya,yb){const w=xb-xa,h=yb-ya,sc=G.s/Math.max(w,h),ox=G.x0+(G.s-w*sc)/2,oy=G.y0+(G.s-h*sc)/2;Object.assign(G,{xa,xb,ya,yb,sc,X:x=>ox+(x-xa)*sc,Y:y=>oy+(yb-y)*sc,ix:px=>xa+(px-ox)/sc,iy:py=>yb-(py-oy)/sc,ox,oy,w:w*sc,h:h*sc});return G}
+function cxA2(g,x1,y1,x2,y2,hs){const dx=x2-x1,dy=y2-y1,l=Math.hypot(dx,dy);if(l<.5){return}const ux=dx/l,uy=dy/l,h=Math.min(l*.45,hs||7);g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.moveTo(x2,y2);g.lineTo(x2-ux*h-uy*h*.5,y2-uy*h+ux*h*.5);g.moveTo(x2,y2);g.lineTo(x2-ux*h+uy*h*.5,y2-uy*h-ux*h*.5);g.stroke()}
+function cxSegs2(g,G,S){g.beginPath();for(let i=0;i<S.length;i+=4){g.moveTo(G.X(S[i]),G.Y(S[i+1]));g.lineTo(G.X(S[i+2]),G.Y(S[i+3]))}g.stroke()}
+function cxPoly2(g,G,P,close){g.beginPath();P.forEach((p,i)=>{const x=G.X(p[0]),y=G.Y(p[1]);i?g.lineTo(x,y):g.moveTo(x,y)});if(close){g.closePath()}g.stroke()}
+function cxFrameBox(g,G){g.strokeStyle='rgba(255,255,255,.16)';g.lineWidth=1;g.strokeRect(G.ox+.5,G.oy+.5,G.w-1,G.h-1);g.font='10px '+MONO;g.fillStyle='rgba(220,226,236,.55)';g.textAlign='center';for(const v of eqNice(G.xa,G.xb,4)){g.fillText(eqFmt(v),G.X(v),G.oy+G.h+11)}g.textAlign='right';for(const v of eqNice(G.ya,G.yb,4)){g.fillText(eqFmt(v),G.ox-3,G.Y(v)+3)}g.textAlign='left'}
+function cxAxL(g,G,a,b){cxMathB(g,a,G.ox+G.w-3,G.oy+G.h-5,'rgba(232,236,242,.9)','right',12);cxMathB(g,b,G.ox+3,G.oy+11,'rgba(232,236,242,.9)','left',12)}
+function cxMathB(g,t,x,y,c,al,f){g.font='italic '+(f||13)+'px "STIX Two Text",serif';const w=g.measureText(t).width,x0=al==='center'?x-w/2:al==='right'?x-w:x;g.fillStyle='rgba(7,10,16,.8)';g.fillRect(x0-3,y-(f||13)+1,w+6,(f||13)+4);cxMath(g,t,x,y,c,al,f)}
+function cxDot(g,x,y,r,c,ring){g.fillStyle=c;g.beginPath();g.arc(x,y,r,0,6.283);g.fill();if(ring){g.strokeStyle='rgba(0,0,0,.6)';g.lineWidth=1;g.stroke()}}
+function cxTxt(g,t,x,y,c,al,f){g.font=(f||11)+'px '+UI;g.fillStyle=c||'rgba(220,226,236,.85)';g.textAlign=al||'left';g.fillText(t,x,y);g.textAlign='left'}
+function cxFitT(g,t,W,f0,fm,fam){let f=f0;g.font=f+'px '+fam;while(g.measureText(t).width>W&&f>fm){f-=.5;g.font=f+'px '+fam}if(g.measureText(t).width>W){while(t.length>2&&g.measureText(t+'…').width>W){t=t.slice(0,-1)}t=t.replace(/[\s·,(]+$/,'')+'…'}return t}
+function cxTxtW(g,t,x,y,c,al,f){const fs=f||11;g.font=fs+'px '+UI;g.fillStyle=c||'rgba(220,226,236,.85)';g.textAlign=al||'left';const W=(g.canvas.clientWidth||g.canvas.width/DPR)-x-8;if((!al||al==='left')&&W>40&&g.measureText(t).width>W){let ln='',yy=y;for(const w of String(t).split(' ')){const q=ln?ln+' '+w:w;if(ln&&g.measureText(q).width>W){g.fillText(ln,x,yy);yy+=fs*1.35;ln=w}else{ln=q}}g.fillText(ln,x,yy)}else{g.fillText(t,x,y)}g.textAlign='left'}
+function cxMath(g,t,x,y,c,al,f){g.font='italic '+(f||13)+'px "STIX Two Text",serif';g.fillStyle=c||'#e8ecf2';g.textAlign=al||'left';g.fillText(t,x,y);g.textAlign='left'}
+function cxBars(g,w,h,B,title){g.fillStyle='#070a10';g.fillRect(0,0,w,h);g.fillStyle='rgba(220,226,236,.8)';eqTop(g,title);let mx=0;for(const b of B){if(isFinite(b[1])){mx=Math.max(mx,Math.abs(b[1]))}}mx=mx||1;const top=24,bh=Math.max(8,Math.min(18,(h-top-8)/B.length-6)),lw=Math.min(118,w*.42),x0=8+lw,ww=w-x0-58,neg=B.some(b=>b[1]<0),z=neg?x0+ww/2:x0,sc=(neg?ww/2:ww)/mx;B.forEach((b,i)=>{const y=top+i*(bh+6);g.fillStyle='rgba(220,226,236,.75)';g.fillText(cxFitT(g,b[0],lw-6,11,11,UI),8,y+bh-3);g.fillStyle=b[2]||'#6fe3ff';const v=isFinite(b[1])?b[1]:0;g.fillRect(Math.min(z,z+v*sc),y,Math.max(1,Math.abs(v*sc)),bh);g.fillStyle='#e8ecf2';g.textAlign='right';g.fillText(cxFitT(g,eqFmt(b[1]),54,10.5,8.5,MONO),w-6,y+bh-3);g.textAlign='left'});g.font='11px '+UI}
+function cxLine(g,x0,y0,w,h,series,xs,title,yr){const r=eqLines(g,x0,y0,w,h,series,xs,title);return r}
+function cxGrad(f,x,y,h){return [(f(x+h,y)-f(x-h,y))/(2*h),(f(x,y+h)-f(x,y-h))/(2*h)]}
+function cxHess(f,x,y,h){const f0=f(x,y);return [(f(x+h,y)-2*f0+f(x-h,y))/(h*h),(f(x,y+h)-2*f0+f(x,y-h))/(h*h),(f(x+h,y+h)-f(x+h,y-h)-f(x-h,y+h)+f(x-h,y-h))/(4*h*h)]}
+const CXCUR={circle:'circle',ellipse:'ellipse',square:'square',tri:'triangle',star:'five-pointed wave',card:'cardioid',bean:'limaçon (bean)',eight:'figure eight'};
+function cxCurve(k,a,b,cx,cy,s){const th=2*Math.PI*s;let x,y;if(k==='ellipse'){x=a*Math.cos(th);y=b*Math.sin(th)}else if(k==='square'){const q=(s*4)%4,i=Math.floor(q),f=q-i,C=[[1,-1],[1,1],[-1,1],[-1,-1]],p=C[i],n=C[(i+1)%4];x=a*(p[0]+(n[0]-p[0])*f);y=a*(p[1]+(n[1]-p[1])*f)}else if(k==='tri'){const q=(s*3)%3,i=Math.floor(q),f=q-i,C=[0,1,2].map(j=>[Math.cos(-Math.PI/2+j*2*Math.PI/3),Math.sin(-Math.PI/2+j*2*Math.PI/3)]),p=C[i],n=C[(i+1)%3];x=a*(p[0]+(n[0]-p[0])*f);y=a*(p[1]+(n[1]-p[1])*f)}else if(k==='star'){const r=a*(1+.28*Math.cos(5*th));x=r*Math.cos(th);y=r*Math.sin(th)}else if(k==='card'){const r=a*.6*(1+Math.cos(th));x=r*Math.cos(th)-a*.4;y=r*Math.sin(th)}else if(k==='bean'){const r=a*(.55+.75*Math.cos(th))/1.1;x=r*Math.cos(th)-a*.2;y=r*Math.sin(th)}else if(k==='eight'){x=a*Math.sin(th);y=b*Math.sin(th)*Math.cos(th)}else{x=a*Math.cos(th);y=a*Math.sin(th)}return [cx+x,cy+y]}
+function cxCurvePts(k,a,b,cx,cy,n){const P=[];for(let i=0;i<n;i++){P.push(cxCurve(k,a,b,cx,cy,i/n))}let A=0;for(let i=0;i<n;i++){const p=P[i],q=P[(i+1)%n];A+=p[0]*q[1]-q[0]*p[1]}if(A<0&&k!=='eight'){P.reverse()}return P}
+function cxInPoly(P,x,y){let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const a=P[i],b=P[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]){c=!c}}return c}
+const CXSPL={xy:[0,1,2],yz:[1,2,0],zx:[0,2,1]},CXAXN='xyz';
+function cxSpI(k){return CXSPL[k]||CXSPL.xy}
+function cxP3(a,b,c,k){const I=cxSpI(k||st.cx.slp),p=[0,0,0];p[I[0]]=a;p[I[1]]=b;p[I[2]]=c;return p}
+function cxRng(seed){let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}}
+const cxRs=(id,lb,k,lo,hi,step,fmt)=>({t:'r',id,lb,min:lo,max:hi,step,fmt:fmt||(v=>fr(+v,step<.01?3:step<.1?2:step<1?1:0)),get:()=>st.cx[k],set:v=>{st.cx[k]=+v;mark()}});
+const cxSl=(id,lb,k,opts,num)=>({t:'s',id,lb,opts,get:()=>String(st.cx[k]),set:v=>{st.cx[k]=num?+v:v;mark()}});
+const cxCh=(lb,k)=>[lb,()=>!!st.cx[k],v=>{st.cx[k]=v;mark()}];
+const cxIn=(id,lb,get,set,ph)=>({t:'i',id,lb,get,set:v=>{set(v);mark()},ph});
+function cxParamSpec(c){if(!c||c.err||!c.ps.length){return []}const o=[{t:'h',lb:'Parameters'}];for(const p of c.ps){const span=p.hi-p.lo,step=span>20?.1:span>2?.01:.001;o.push({t:'r',id:'cxP_'+p.n,lb:p.n,min:p.lo,max:p.hi,step,fmt:v=>fr(+v,step<.01?3:2),get:()=>isFinite(st.cx.prm[p.n])?st.cx.prm[p.n]:p.v,set:v=>{st.cx.prm[p.n]=+v;mark()}})}return o}
+function cxErrNote(id){return {t:'n',lb:'',id}}
+function cxSig(){const e=st.cx,m=e.mode,c=CXMD[m]&&CXMD[m].sig?CXMD[m].sig():'';return m+'|'+c}
+function cxRespec(force){const box=$('sTw');if(!box||st.alg!=='cx'){return}const a=document.activeElement;if(!force&&a&&box.contains(a)&&(a.tagName==='INPUT'&&a.type==='text'||a.tagName==='SELECT')){return}const s=cxSig();if(!force&&s===CXL.sig){return}CXL.sig=s;const y=box.closest('.tabp')?box.closest('.tabp').scrollTop:0;box.innerHTML='';const n0=CTL.length;mkCtl(specCx(),box);box._ctl=CTL.splice(n0);box._first=box.firstElementChild;for(const f of box._ctl){try{f()}catch(err){}}}
+function cxSyncCtl(){const box=$('sTw');if(!box||st.alg!=='cx'){return}if(!box._ctl||box._first!==box.firstElementChild){cxRespec(true);return}for(const f of box._ctl){try{f()}catch(err){}}}
