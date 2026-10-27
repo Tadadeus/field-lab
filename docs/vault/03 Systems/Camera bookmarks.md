@@ -1,8 +1,9 @@
 ---
 tags: [systems, camera]
 ---
-# Camera bookmarks
+# Camera bookmarks (`CAMS`)
 
-- `CAMS` saves camera position, target and zoom under a name (`bitwistor-cams`); sphere/zoom state under `bitwistor-cz`, `bitwistor-cz2`.
-- Tap a bookmark to fly back to it.
-- Independent of the sim state ([[History timeline]]).
+- `camGet()` captures yaw, pitch, distance, FOV, pan, 3D rotation `M3`, orbit flag and the 4D view.
+- Named bookmarks in the popover `.bmpop` (button `#apBm` on the view); saved in `bitwistor-cams`.
+- `camFly(c)` flies to a bookmark over 700 ms with ease-in-out (`bmTick`) and stops auto-orbit.
+- `bitwistor-cz`, `bitwistor-cz2` and `bitwistor-spcz` hold zoom levels of other views ([[Storage keys]]).

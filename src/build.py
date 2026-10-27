@@ -215,3 +215,5 @@ st=list(re.finditer(r'<style>([\s\S]*?)</style>',s))
 big=max(st,key=lambda x:len(x.group(1)))
 s=s[:big.start(1)]+ds.run(big.group(1),open('sys.css',encoding='utf8').read())+s[big.end(1):]
 open('Field_Lab.html','w',encoding='utf8').write(s)
+
+open('../dist/index.html','w',encoding='utf8').write(s)

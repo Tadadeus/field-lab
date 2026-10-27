@@ -4,36 +4,33 @@ lab-id: la
 ---
 # Lab Lattice (`la`): field theory on a grid
 
-**Idea.** A field lives on an `N×N×N` grid and is stepped in time by **leapfrog** (symplectic, second order). Each model in `LATM` defines its fields, a Hamiltonian/force, initial conditions and readouts. The lab renders the field as isosurface/volume/slice and charts conserved quantities.
+**Idea.** Fields live on a 3D grid (sites, links, plaquettes) and are stepped in time with a kick–drift (leapfrog) scheme. Each model in `LATM` declares its field counts (`na` site fields, `nl` link fields, `ne` electric fields), time step `dt`, sliders `ps`, start states `ini` and colour modes `cm`.
 
-## Models (`LATM`)
-| id | model |
-|---|---|
-| phi4 | real scalar φ⁴ (kinks, domain walls, symmetry breaking) |
-| cplx | complex scalar, U(1) global (Goldstone mode, vortices; NG modes are in the dynamics) |
-| ah | Abelian Higgs (U(1) gauge + Higgs, superconductor, Meissner effect, flux tubes) |
-| em | free Maxwell field (E, B waves) |
-| su2 | SU(2) gauge |
-| su3 | SU(3) gauge (gluons) |
-| ew | electroweak SU(2)×U(1) with Higgs |
-| dirac | Dirac fermion field |
-| grav | linearised gravity / waves |
-| schr | Schrödinger equation (wave packets, tunnelling) |
-| gpe | Gross–Pitaevskii (Bose–Einstein condensate, vortices) |
-| tdgl | time-dependent Ginzburg–Landau |
-| llg | Landau–Lifshitz–Gilbert (magnetisation, skyrmions) |
-| chain | quantum spin chain (small exact state vector) |
-| lqcd | lattice QCD style link variables |
-| metal | tight-binding metal / band structure |
+## Models (`LATM`, 16), with their start states
+| id | label | start states |
+|---|---|---|
+| phi4 | Real scalar φ⁴ · domain walls | random quench, collapsing bubble, colliding walls, false vacuum decays, bubble too small to grow, many bubbles nucleate |
+| cplx | Complex Higgs · global strings | random quench, vortex ring, vortex and antivortex |
+| ah | Abelian Higgs · flux tubes | random quench, vortex and antivortex, vortex ring |
+| em | Maxwell U(1) · photons | oscillating dipole, two light pulses |
+| su2 | SU(2) Yang–Mills · W field | random color field, colliding color waves |
+| su3 | SU(3) Yang–Mills · gluons | random gluon field, colliding gluon waves |
+| ew | SU(2) Higgs doublet · electroweak | Higgs quench, Higgs bubble |
+| dirac | Dirac field · electron | moving packet, Klein paradox, Zitterbewegung, magnetic field, Coulomb atom, left-handed packet (Weyl) |
+| grav | Linearized gravity · waves | orbiting binary, inspiral chirp |
+| schr | Schrödinger particle · quantum waves | double slit, tunneling, squeezed state in a trap, orbiting in a trap, quantum Hall edge state, edge state meets an impurity, Landau level orbit |
+| gpe | Bose–Einstein condensate · Gross–Pitaevskii | rotating trap, dark soliton, two condensates, vortex ring |
+| tdgl | Superconductor · Ginzburg–Landau | field switched on, cooled in a field, with pinning centers |
+| llg | Chiral magnet · skyrmions | skyrmion lattice, helical stripes, one skyrmion, magnetic domains |
+| chain | Quantum spin chain · entanglement | all up then sudden field, one flipped spin, Néel ↑↓↑↓, domain wall ↑↑↑↓↓↓, all along x |
+| lqcd | Lattice QCD 2D · confinement | hot start (random links), cold start (links = 1) |
+| metal | Superconducting metal · Meissner, vortices, current | cooled in a field, field switched on, cooled then field removed, slowly warmed |
 
 ## Code
-- CPU step: `latStepCPU`; GPU path via WebGPU compute (see [[Rendering with WebGPU]]) when available, same equations, CPU is the reference.
-- Boundary conditions, damping, quench and "kick" tools are controls in the `qm`, `ph` and `field` tabs of [[Settings and app popover]].
-- Isosurface via marching tetrahedra (`mtRun`), volume ray-march on GPU, slices through the engine registry `ENG.la` (`render3, hide, bg, plane, chart, slice, svcap, chip`). See [[Architecture]].
-- Charts: energy, norm, topological charge, order parameter; data exportable via [[Telemetry pins and CSV]].
-- Per-model scenes in [[Scene catalog]] (category Lattice); help entries in [[Help tooltips glossary tour]].
+- CPU reference step `latStepCPU(dt)`: source terms (`latSrc`), then a `kick` per model, damping `1 − gam·|dt|`. Dirac has its own `latDiracCPU`; topological defects are found by `latDefectsCPU`.
+- GPU path: `latGpuBuild / latGpuStep / latGpuKick / latGpuDraw / latGpuSlice`, plus volume rendering `latVolOn / latVolStep` ([[Rendering with WebGPU]]).
+- Absorbing edges: `latSponge`. Grid size: `latN` (follows [[Quality tiers]]).
+- Registered as `ENG.la` (`render3, hide, bg, plane, chart, slice, svcap, chip`), see [[Architecture]].
+- 64 Lattice scenes in [[Scene catalog]].
 
-## Notes
-- Time stepping is velocity-Verlet/leapfrog, so energy oscillates but does not drift.
-- Quality tier sets `N` and substeps per frame, see [[Quality tiers]].
-- Universe-scale physics built on similar fields: [[Lab Universe]].
+Related: [[Lab Universe]], [[Lab su3]], [[Lab Qubits]].

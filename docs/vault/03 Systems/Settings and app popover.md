@@ -3,8 +3,22 @@ tags: [systems, ui, settings]
 ---
 # Settings and app popover
 
-**Settings tabs:** field · obj · all · d4 · vis · view · tw · geo · qm · ph · mem.
+## Settings tabs (4D field labs)
+| id | label | sections |
+|---|---|---|
+| field | Field | field law and sources |
+| obj | Objects | [[Sandbox objects and probes]] |
+| all | Motion | animation of the whole scene |
+| d4 | 4D view | Angles, Spins |
+| vis | Visual | Engine and look |
+| view | Camera | camera |
+| tw | State | Twistor Z₁, Twistor Z₂ |
+| geo | Geometry | Background spacetime · Generalized geometry on T ⊕ T* · Supersymmetry ℂ⁴\|𝒩 |
+| qm | Quantum | Non-commutative space · Quantum group U_q(sl₂) · Interference and spinors |
+| ph | Physics | Constants of nature · Path integral · Strings · Solitons and instantons · Ambitwistors and scattering |
+| mem | Memory | Share this view, saved states |
 
-- `field`: sources and field law; `obj`: sandbox objects ([[Sandbox objects and probes]]); `all`: everything; `d4`: 4D rotation and projection; `vis`: look; `view`: camera; `tw`: twistor options; `geo`, `qm`, `ph`: [[Quantum Geometry Physics tabs]]; `mem`: saved states, history and storage.
-- **App popover**: quality ([[Quality tiers]]), engine choice ([[Rendering with WebGPU]]), theme, sound ([[Sound]]), reduced motion.
-- App-level choices persist under `bitwistor-app` ([[Storage keys]]).
+Engine labs (Lattice, Universe, Fluid, Law, Calc) hide most of these tabs (`body.eng` CSS) and show their own controls. A settings search box filters across tabs. Details: [[Quantum Geometry Physics tabs]].
+
+## App popover (`.apop`)
+Quality ([[Quality tiers]]), engine WebGL/WebGPU ([[Rendering with WebGPU]]), theme, colour maps (`APP.cmap`), sound ([[Sound]]), motion. Stored under `bitwistor-app` ([[Storage keys]]).

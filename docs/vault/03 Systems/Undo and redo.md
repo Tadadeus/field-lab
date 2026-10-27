@@ -1,8 +1,9 @@
 ---
 tags: [systems, state]
 ---
-# Undo and redo
+# Undo and redo (`UNDO`)
 
-- `UNDO` stack of state patches pushed on control changes, scene loads and sandbox edits ([[Sandbox objects and probes]]).
-- Shortcuts in [[Keyboard shortcuts]].
-- See also [[History timeline]].
+- `UNDO = {st, rd, last, key, down}`: undo and redo stacks of JSON snapshots.
+- `usnap()` snapshots `st` except fast-changing keys `UVOL` (`fv, v, mph, yaw, pitch, play, rev, sel`) and the camera distance; `uApply` restores one.
+- So undo covers settings, scenes and sandbox edits, not the running simulation or the camera.
+- Shortcuts in [[Keyboard shortcuts]]. See also [[History timeline]].

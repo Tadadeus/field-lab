@@ -1,14 +1,19 @@
 ---
 tags: [systems, performance]
 ---
-# Quality tiers
+# Quality tiers (`QOPT`)
 
-Seven options in `QOPT` / `PERFV`: **auto, potato, low, med, high, ultra, max** (6 fixed tiers plus auto).
+| id | name | description (from the app) |
+|---|---|---|
+| auto | Auto | Adapts to this device and lowers detail by itself when frames get slow. |
+| potato | Potato | Fastest: coarse grids and meshes, ¾× pixels in 3D, fewest particles. |
+| low | Low | Phones and older laptops: 1× pixels, light grids. |
+| med | Medium | Balanced: 1.5× pixels, medium grids and particle counts. |
+| high | High | Sharp: 2× pixels, full grids, meshes and particle counts. |
+| ultra | Ultra | Smoothest: up to 3× supersampled pixels, 1.5× finer grids, meshes and images. |
+| max | Maximum | Best possible: up to 4× supersampled pixels, 2× finer grids, meshes and images, most particles. For 2K/4K screens on fast devices. |
 
-- **auto** (`autoQ`): watches frame time (`rdt` clamped to 0.05 s) and moves the tier down or up.
-- **potato**: lowest cost; **must never get heavier** after any change (project rule, see [[Project rules]]; measured by `potperf.py`, see [[Verification tools]]).
-- Each tier sets: grid/particle counts, substeps, pixel ratio, post effects, GPU features ([[Rendering with WebGPU]]).
-- The switch lives in the app popover ([[Settings and app popover]]) and in the quality control built in `q.js`.
-- Saved in state ([[State and persistence]]).
-
-Descriptions shown to the user come from `QOPT` and are listed in [[Parameter reference]].
+- Stored as `APP.perf`. `QS(a,b)` and `QLV` scale sizes per tier (e.g. Fluid grid 128…576, Universe particles).
+- **Auto** watches frame time and lowers `RT.qlev` when slow.
+- Rule: Potato must never get heavier ([[Project rules]], checked by `potperf.py` in [[Verification tools]]).
+- Switch in the app popover and the quality control (`q.js`).

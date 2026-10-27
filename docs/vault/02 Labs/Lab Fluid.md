@@ -2,24 +2,22 @@
 tags: [lab, fl, fluid]
 lab-id: fl
 ---
-# Lab Fluid (`fl`): lattice Boltzmann and smoke
+# Lab Fluid (`fl`): wind tunnel and smoke
 
-Two solvers in one lab.
+Two solvers (`FLM`): **`lbm`** "Wind tunnel (lattice Boltzmann)" and **`smoke`** "Smoke and heat (stable fluids)".
 
-## D2Q9 lattice Boltzmann (`flLbmStep`)
-- 9 discrete velocities on a 2D grid; collide (BGK relaxation to equilibrium, relaxation time sets viscosity) then stream.
-- Obstacles use bounce-back; inflow/outflow set the boundary velocity.
-- Outputs: velocity, vorticity, pressure (density), shown as colour field and streaklines. Re = U·L/ν is displayed.
-- Classic scenes: flow past a cylinder (von Kármán street), channel, lid-driven cavity.
+## Wind tunnel: D2Q9 lattice Boltzmann (`flLbmStep`)
+- Distributions on 9 velocities, BGK collision with relaxation time from Re (`flTau`), streaming, bounce-back walls (`flBound`).
+- Settings (`flDef`): inflow `u0`, Reynolds `re`, obstacle `obs` (cylinder by default), size/angle/position, Smagorinsky `smag`, boundary `bc` (tunnel), lid speed, shear.
+- Readouts: vorticity `flVort`, Strouhal number `flStrouhal`, flow rate, mass `flMass`.
 
-## Stable-fluids smoke and heat (`flSmokeStep`)
-- Semi-Lagrangian advection, pressure projection (Jacobi/Gauss–Seidel), buoyancy from temperature/density, dissipation.
-- Interactive: tap/drag injects smoke and velocity.
+## Smoke and heat: stable fluids (`flSmokeStep`)
+Semi-Lagrangian advection (`flAdvect`), pressure projection (`flProject`), buoyancy, heat, dye, vorticity confinement `vc`, dissipation, sources (plume…).
 
-## Code
-- Registered as `ENG.fl` (`render3, hide, bg, plane, chart, slice, svcap, chip`), see [[Architecture]].
-- Wrapper hot-swap on `ENG.fl.plane` is used by the design layer; keep it intact.
-- Quality tier sets grid size and substeps ([[Quality tiers]]).
-- Colourmaps and bars: [[Colormaps and colorbars]].
+## Tools
+Draw on the view with `flTool`: wall, erase, stir and more; brush size `brush`. Tracers (`flTrSpawn / flTrStep`), arrows, stripes.
 
-Related: [[Lab Law]] (PDE mode can solve fluid-like equations), [[Lab Calc]] (vector fields).
+## Scenes (28)
+Kármán street, slow/fast flow, square cylinder, flat plate, wing at 6° and 22° (stall), two cylinders, backward step, Poiseuille channel, lid-driven cavity, Kelvin–Helmholtz, Taylor–Green, porous rock, city blocks, Venturi, baffles, empty tunnel, smoke plume, candle, Rayleigh–Bénard, Rayleigh–Taylor, vortex pair, smoke jet, stir the tea, Tesla valve both ways. See [[Scene catalog]].
+
+Grid width follows quality: 128 / 160 / 224 / 320 / 448 / 576 (`flCap`, [[Quality tiers]]). Engine `ENG.fl` ([[Architecture]]); colorbar on the top view ([[Colormaps and colorbars]]).

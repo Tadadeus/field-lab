@@ -3,15 +3,13 @@ tags: [systems, rendering, webgpu]
 ---
 # Rendering with WebGPU (optional)
 
-Stored engine choice: `ENGK` = `bitwistor-engine` (see [[Storage keys]]). If the device has no WebGPU or init fails, the app stays on [[Rendering with WebGL]].
+Engine choice stored in `bitwistor-engine` (`ENGK`); `GPU.eng === 'gl'` forces WebGL. If `navigator.gpu` or an adapter is missing, `gpuStart` fails and the app stays on [[Rendering with WebGL]]; the engine badge (`.engtag`, `gpuChip`) says why.
 
-## The `GPU` object
-- `gpuStart` requests adapter/device, `gpuBuild` creates pipelines and buffers, `gpuRender` draws a frame.
-- WGSL shaders are the `WGSL_*` strings in the script.
-- **HDR bloom** post-processing, **volume ray-march**, **GPU particles**, **GPU lines**, **GPU isosurface**, and the lattice compute step ([[Lab Lattice]]).
-- Same data as the WebGL path (`FD`), so maths is not duplicated; only drawing and some compute move.
+## Parts of the `GPU` object
+- Start and build: `gpuStart` (high-performance adapter), `gpuBuild`, `gpu2Build`; draw: `gpuRender`.
+- Particles `gpuPart*`, lines `gpuLines*`, isosurface `gpuIso*`, slices `gpuSlice*`, volume `gpuVol*`.
+- Post-processing `gpuPost` (HDR bloom with mip chain `gpuPostMips`); only runs when wanted (`gpuPostWant`: bloom > 0, or volume on).
+- Lattice compute `latGpu*` ([[Lab Lattice]]); Universe gets up to 16384 particles.
+- Shaders are the `WGSL_*` strings; uniforms are packed by the `GU` index table.
 
-## Rules
-- Maths and results must match the CPU/WebGL path.
-- Potato tier never starts WebGPU post effects ([[Quality tiers]]).
-- Phone note: bloom and volume are the costly parts; they drop first when `autoQ` lowers quality.
+Maths matches the CPU path; WebGPU only moves drawing and some compute.

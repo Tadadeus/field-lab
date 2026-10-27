@@ -4,25 +4,26 @@ lab-id: cx
 ---
 # Lab Calc (`cx`): multivariable calculus you can see
 
-## Modes (`CXM`)
-| mode | what it shows |
+## Modes (`CXM`, 10)
+| id | label |
 |---|---|
-| surf | surface z = f(x,y), gradient, tangent plane, level curves |
-| dint | double integral: volume under a surface, Riemann boxes |
-| vec2 | 2D vector field, flow lines, divergence, curl |
-| vec3 | 3D vector field, flux, circulation |
-| para | parametric curves and surfaces |
-| map | maps ℝ²→ℝ², Jacobian, area scaling |
-| air | airfoil / complex-map flow |
-| vol | volume integrals, triple integral regions |
-| hyp | hyperbolic geometry |
-| v4 | 4D objects and projections |
+| surf | Derivatives and gradients |
+| dint | Double integrals |
+| vec2 | Vector fields in the plane |
+| vec3 | Vector fields in space |
+| para | Surfaces and shape tools |
+| map | Maps and Jacobians |
+| air | Airflow and lift |
+| vol | Triple integrals and solids |
+| hyp | Hypersurfaces in 4D |
+| v4 | Vector fields in 4D |
 
-## Data
-- Function families `CXF`; **102 calculus scenes** `CXS` (part of the 504 in [[Scene catalog]]).
-- Expressions are compiled from text like [[Lab Law]] `math` mode.
+## State (`cxDef`)
+Function `fs` (default `peaks`), domain `R`, resolution `res`, probe point `px, py`; toggles for tangent plane, gradient, contours, critical points; Lagrange constraint (`lag`, `con`); integration region `reg`, coordinates `coord`, Riemann rule `rule`, `n`; vector field `v2`/`v3` presets or custom `P, Q`, streamlines, curl/divergence colouring, circulation curve, paddle wheel.
 
-## Code
-Built from `cx0.js … cx9.js` part files inserted before `const IIC={el:null` (see [[Build pipeline]]); registered as `ENG.cx`.
+## Data and files
+- Function families `CXF`, scenes `CXS` (102, part of the 504 in [[Scene catalog]]).
+- Source parts `cx0.js … cx9.js`, `cxs.js`, `cxg.js`, inserted before `const IIC={el:null` ([[Build pipeline]]). Mini views panel `#cxMini`.
+- Uses the Law Lab expression compiler ([[Lab Law]], `CXH = EQHD`).
 
-Related: [[Lab Fluid]], [[Shared 4D field engine]] (for the v4 projections).
+Related: [[Lab Fluid]], [[Shared 4D field engine]].
