@@ -33,7 +33,7 @@ o="ta=st.alg==='fl'||"
 assert s.count(o)==1
 s=s.replace(o,"ta=st.alg==='fl'||st.alg==='cx'||")
 import os
-parts=[f for f in ['cx0.js','cx1.js','cx2.js','cx3.js','cx4.js','cx5.js','cx6.js','cx7.js','cx8.js','cx9.js','cxs.js','cxg.js','cb.js','q.js','ux.js'] if os.path.exists(f)]
+parts=[f for f in ['cx0.js','cx1.js','cx2.js','cx3.js','cx4.js','cx5.js','cx6.js','cx7.js','cx8.js','cx9.js','cxs.js','cxg.js','cb.js','q.js','ux.js','qg.js'] if os.path.exists(f)]
 code='\n'.join(open(f,encoding='utf8').read().strip() for f in parts)
 a='const IIC={el:null'
 assert s.count(a)==1

@@ -46,7 +46,7 @@ The first seven share one engine: [[Shared 4D field engine]].
 [[Design tokens]] · [[Component conventions]] · [[Motion]] · [[Light theme and data colour]]
 
 ## Reference *(generated)*
-[[Scene catalog]] (504 scenes) · [[Parameter reference]] (359 sliders) · [[Glossary]] (202 terms) · [[Function index]] (1865 names) · [[Keyboard shortcuts]] · [[Guided tour]] · [[Verification tools]]
+[[Scene catalog]] (506 scenes) · [[Parameter reference]] (359 sliders) · [[Glossary]] (202 terms) · [[Function index]] (1865 names) · [[Keyboard shortcuts]] · [[Guided tour]] · [[Verification tools]]
 
 ## Roadmap and ideas
 [[Particle Fields lab plan]] (waves of all 17 Standard Model particles) · [[s+tD sandbox idea]] · [[Open decisions]]

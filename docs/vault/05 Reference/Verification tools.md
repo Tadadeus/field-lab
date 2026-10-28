@@ -17,4 +17,4 @@ tags: [reference, testing]
 | `finalsweep.sh` | runs the set before release |
 | impeccable detector | design anti-pattern scan (1 accepted finding: corner engine badge) |
 
-Release gate: scene error sweep (all 504 scenes) at Auto, Potato and Ultra with 0 errors. See [[Project rules]], [[Build pipeline]], [[Accessibility layer]].
+Release gate: scene error sweep (all 506 scenes) at Auto, Potato and Ultra with 0 errors. See [[Project rules]], [[Build pipeline]], [[Accessibility layer]].

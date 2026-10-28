@@ -3,7 +3,7 @@ tags: [reference, scenes]
 ---
 # Scene catalog
 
-All **504** ready-made scenes. A scene is one entry of the `SC` array: `{k, th, n, f(C)}`. `k` is the unique key, `th` the lab id, `n` the title, `f` fills a fresh context `C` (see [[Scenes system]]). Generated from the running app; keys are what share codes and favourites store.
+All **506** ready-made scenes. A scene is one entry of the `SC` array: `{k, th, n, f(C)}`. `k` is the unique key, `th` the lab id, `n` the title, `f` fills a fresh context `C` (see [[Scenes system]]). Generated from the running app; keys are what share codes and favourites store.
 
 ## Twistor (`tw`), 50 scenes
 Lab note: [[Lab Twistor]]
@@ -240,7 +240,7 @@ Lab note: [[Lab Sedenion]]
 | `se_x_mirror` | Mirror sedenions breathing |  |
 | `se_x_edge` | On the edge of the octonions: γ = 10° |  |
 
-## Lattice (`la`), 64 scenes
+## Lattice (`la`), 66 scenes
 Lab note: [[Lab Lattice]]
 
 | key | title | what it shows |
@@ -269,6 +269,8 @@ Lab note: [[Lab Lattice]]
 | `la_atom` | Dirac: an electron bound to a nucleus |  |
 | `la_gw` | Gravity: waves from an orbiting binary |  |
 | `la_chirp` | Gravity: a binary inspiral chirp |  |
+| `la_super` | Dirac: a supercritical nucleus (Z > 173) sparks the vacuum | added v22 |
+| `la_foam` | Gravity: quantum foam, micro black holes flicker and evaporate | added v22, illustration |
 | `la_slit` | Schrödinger: double-slit interference |  |
 | `la_tunnel` | Schrödinger: tunneling through a barrier |  |
 | `la_squeeze` | Schrödinger: a squeezed state breathes in a trap |  |

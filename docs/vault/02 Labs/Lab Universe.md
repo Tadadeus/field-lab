@@ -26,7 +26,7 @@ lab-id: un
 | lrsym | Left–right symmetric | parity conserved |
 
 ## Settings sections
-Real physics · Big Bang (`bb*`, epochs and nucleosynthesis) · Life of a star (`sr*`, track by mass 10^`srM`, colour from temperature) · Black hole (`unBH*`, Schwarzschild radius, Hawking strength `unHawk`) · Binary black holes (`unBN*`) · Neutrino oscillations (`nu*`: `nuMix`, `nuProb`). Chirality is `st.uni.chi` (`unChi`, neutrino helicity).
+Real physics · Big Bang (`bb*`, epochs and nucleosynthesis) · Life of a star (`sr*`, track by mass 10^`srM`, colour from temperature) · Black hole (`unBH*`, Schwarzschild radius, Hawking strength `unHawk`) · Binary black holes (`unBN*`) · Neutrino oscillations (`nu*`: `nuMix`, `nuProb`) · Invent a particle (`unInv*`: name, symbol, mass, charge, spin, decays; `unInvAdd` registers it). Chirality is `st.uni.chi` (`unChi`, neutrino helicity).
 
 Event toggles in `unDef`: decays, annihilation, hadronisation, reactions, medium; plus trails, bounds, particle spawner (`spk`, energy `sE`, direction `sDir`).
 

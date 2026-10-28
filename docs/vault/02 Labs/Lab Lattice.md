@@ -26,11 +26,16 @@ lab-id: la
 | lqcd | Lattice QCD 2D · confinement | hot start (random links), cold start (links = 1) |
 | metal | Superconducting metal · Meissner, vortices, current | cooled in a field, field switched on, cooled then field removed, slowly warmed |
 
+## Added in `src/qg.js` (v22)
+- **dirac · `super`** "supercritical nucleus (Z > 173)": starts as the Coulomb atom, then the charge ramps from Z = 1 to the slider value over t = 70 (`qgZ`, smoothstep). The softened potential −Z/√(r²+1) acts as a finite nucleus. Measured on the lattice (m = 0.3): the 1s level crosses −m at Z_cr ≈ 2.33, shown as 173 (`qgZr`). Above it the 1s state dives into the Dirac sea, so the particle part drops and an antiparticle halo leaks out (positron emission in the hole picture). Scene `la_super`.
+- **grav · `foam`** "quantum foam · micro black holes" (illustration): random Planck-scale kicks to the six metric components (`qgFoamStep`). A site whose energy exceeds 7× the sampled mean collapses into a micro black hole (≤ 5 at once), which absorbs ripples and evaporates as dM/dt = −0.03/M². It ends in a burst that sends out a quadrupole ripple. The black hole state lives in `LT.qf`; meshes are in `QGV`. Scene `la_foam`.
+- Both run on the CPU path only: a `latGpuReady` wrapper returns false for them, so GPU shaders and other models are untouched.
+
 ## Code
 - CPU reference step `latStepCPU(dt)`: source terms (`latSrc`), then a `kick` per model, damping `1 − gam·|dt|`. Dirac has its own `latDiracCPU`; topological defects are found by `latDefectsCPU`.
 - GPU path: `latGpuBuild / latGpuStep / latGpuKick / latGpuDraw / latGpuSlice`, plus volume rendering `latVolOn / latVolStep` ([[Rendering with WebGPU]]).
 - Absorbing edges: `latSponge`. Grid size: `latN` (follows [[Quality tiers]]).
 - Registered as `ENG.la` (`render3, hide, bg, plane, chart, slice, svcap, chip`), see [[Architecture]].
-- 64 Lattice scenes in [[Scene catalog]].
+- 66 Lattice scenes in [[Scene catalog]].
 
 Related: [[Lab Universe]], [[Lab su3]], [[Lab Qubits]].

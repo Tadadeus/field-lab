@@ -14,7 +14,7 @@ Switch with the lab tabs at the top (`#segTh`) or keys **1…9, 0**.
 | Simulation labs | [[Lab Lattice]], [[Lab Universe]], [[Lab Fluid]] | Real time-stepping solvers with their own engine object registered in `ENG`. |
 | Build-your-own labs | [[Lab Law]], [[Lab Calc]] | You type formulas; they are compiled in the browser. |
 
-In total there are **504 ready-made scenes** ([[Scene catalog]]) and **359 documented sliders** ([[Parameter reference]]).
+In total there are **506 ready-made scenes** ([[Scene catalog]]) and **359 documented sliders** ([[Parameter reference]]).
 
 ## What you can do in any lab
 - Pick a scene, press play, drag the 3D view to turn it, pinch/scroll to zoom, tap to drop a probe ([[Sandbox objects and probes]]).
