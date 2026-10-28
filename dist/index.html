@@ -1124,6 +1124,7 @@ html .prs{box-shadow:inset 0 0 0 999px color-mix(in srgb,var(--acc) 26%,transpar
 html .prs:where(.erow,summary,h3.sph,.pdh,#segTh button,.brand){transform:none!important}
 html .prs:where(.erow,summary,h3.sph,.pdh,.ib){border-color:transparent!important}
 @media (prefers-reduced-motion:reduce){html .prs{transform:none!important}}
+html .prs0{box-shadow:inset 0 0 0 999px color-mix(in srgb,var(--fg) 10%,transparent)!important;transition-duration:0s!important}
 </style>
 
 <div class="wrap">
@@ -7353,13 +7354,17 @@ const QGTX={super:'A nucleus whose charge grows past the critical value Z ≈ 17
   if(k==='foam'&&LT.qf){const Q=LT.qf;setT('ln4','micro black holes: '+Q.bh.length+' now · '+Q.made+' formed · '+Q.gone+' evaporated')}return r};ENG.la.dom=latDom;const e0=ENG.la.hide;ENG.la.hide=function(){if(QGV.g){QGV.g.visible=false}return e0.apply(this,arguments)}}
 {const D=(k,n,mo,ini,o)=>({k,th:'la',n,f:C=>{C.state=mo;C.lat=Object.assign(latDef(),{model:mo,init:ini,dt:LATM[mo].dt,gam:0},o||{})}});
   SC.push(D('la_super','Dirac: a supercritical nucleus (Z > 173) sparks the vacuum','dirac','super',{m:.3,Z:3,ncpu:32,col:'pa',rate:8}),D('la_foam','Gravity: quantum foam, micro black holes flicker and evaporate','grav','foam',{amp:1,gam:.03,col:'heat',rate:10}));{const sc=SC[SC.length-1],f0=sc.f;sc.f=C=>{f0(C);C.vw.dist=10}}PRV.la_super=PRV.la_foam='000000000000011001011000'}
-{const PSEL='button,[role=button],[role=tab],[role=radio],[role=menuitem],.chip,.act,.icon,.mode,.tab,.ib,.erow,summary,h3.sph,.tpin,.pdh',PMIN=180;let pEl=null,pT=0,pTm=0;
-  const pOff=()=>{if(!pEl){return}const el=pEl;pEl=null;clearTimeout(pTm);pTm=setTimeout(()=>el.classList.remove('prs'),Math.max(0,PMIN-(performance.now()-pT)))};
-  const pOn=el=>{if(pEl&&pEl!==el){pEl.classList.remove('prs')}clearTimeout(pTm);pEl=el;pT=performance.now();el.classList.add('prs')};
-  document.addEventListener('pointerdown',e=>{if(e.button>0){return}const el=e.target&&e.target.closest?e.target.closest(PSEL):null;if(!el||el.disabled||el.getAttribute('aria-disabled')==='true'){return}pOn(el)},{passive:true,capture:true});
-  for(const t of ['pointerup','pointercancel','dragstart']){addEventListener(t,pOff,{passive:true,capture:true})}addEventListener('blur',e=>{if(e.target===window){pOff()}})
-  document.addEventListener('keydown',e=>{const a=document.activeElement;if((e.key==='Enter'||e.key===' ')&&a&&a.matches&&a.matches(PSEL)){pOn(a);pOff()}},true);
-  document.addEventListener('touchstart',()=>{},{passive:true})}
+{const PSEL='button,[role=button],[role=tab],[role=radio],[role=menuitem],.chip,.act,.icon,.mode,.tab,.ib,.erow,summary,h3.sph,.tpin,.pdh',PMIN=180;let pEl=null,pT=0;const pTm=new Map();
+  const pFind=t=>t&&t.closest?t.closest(PSEL):null;
+  const pRm=(el,w)=>{clearTimeout(pTm.get(el));pTm.set(el,setTimeout(()=>{el.classList.remove('prs','prs0');pTm.delete(el)},w))};
+  const pOff=()=>{if(!pEl){return}const el=pEl;pEl=null;pRm(el,Math.max(0,PMIN-(performance.now()-pT)))};
+  const pOn=el=>{if(pEl===el){return}if(pEl){pEl.classList.remove('prs','prs0')}clearTimeout(pTm.get(el));pEl=el;pT=performance.now();el.classList.add(el.disabled||el.getAttribute('aria-disabled')==='true'?'prs0':'prs')};
+  const pDown=t=>{const el=pFind(t);if(el){pOn(el)}};
+  document.addEventListener('pointerdown',e=>{if(e.button>0){return}pDown(e.target)},{passive:true,capture:true});
+  document.addEventListener('touchstart',e=>{const t=e.touches&&e.touches[0];if(t){pDown(document.elementFromPoint(t.clientX,t.clientY)||e.target)}},{passive:true,capture:true});
+  for(const t of ['pointerup','pointercancel','dragstart','touchend','touchcancel']){addEventListener(t,pOff,{passive:true,capture:true})}addEventListener('blur',e=>{if(e.target===window){pOff()}});
+  document.addEventListener('click',e=>{const el=pFind(e.target);if(!el){return}if(pEl&&pEl!==el){pEl.classList.remove('prs','prs0');pEl=null}for(const o of document.querySelectorAll('.prs')){if(o!==el){o.classList.remove('prs')}}el.classList.add('prs');pRm(el,PMIN)},true);
+  document.addEventListener('keydown',e=>{const a=document.activeElement;if((e.key==='Enter'||e.key===' ')&&a&&a.matches&&a.matches(PSEL)){pOn(a);pOff()}},true)}
 function latSlW(w){const L=typeof qLv==='function'?qLv():1;if(L<=0){return Math.min(200,Math.round(w/2))}return Math.max(2,Math.min([200,240,320,400,480,560][Math.min(5,L)],Math.round(w*qDpr())))}
 function latTri(V,N,p){const o=[0,0,0,0],i0=p.map(Math.floor),t=p.map((x,k)=>x-i0[k]);for(let c=0;c<8;c++){const d=[c&1,(c>>1)&1,(c>>2)&1];let w=1;const ix=[0,0,0];for(let k=0;k<3;k++){ix[k]=Math.max(0,Math.min(N-1,i0[k]+d[k]));w*=d[k]?t[k]:1-t[k]}if(!w){continue}const s=4*(ix[0]+N*(ix[1]+N*ix[2]));o[0]+=w*V[s];o[1]+=w*V[s+1];o[2]+=w*V[s+2];o[3]+=w*V[s+3]}return o}
 const IIC={el:null,ov:null,btn:null,get:null};

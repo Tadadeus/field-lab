@@ -60,3 +60,4 @@ html .prs{box-shadow:inset 0 0 0 999px color-mix(in srgb,var(--acc) 26%,transpar
 html .prs:where(.erow,summary,h3.sph,.pdh,#segTh button,.brand){transform:none!important}
 html .prs:where(.erow,summary,h3.sph,.pdh,.ib){border-color:transparent!important}
 @media (prefers-reduced-motion:reduce){html .prs{transform:none!important}}
+html .prs0{box-shadow:inset 0 0 0 999px color-mix(in srgb,var(--fg) 10%,transparent)!important;transition-duration:0s!important}
