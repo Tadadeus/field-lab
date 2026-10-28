@@ -1118,6 +1118,12 @@ html .wrap .sech>#telCsv{margin-left:calc(-1*var(--s-1))}
 html .mgrid figure>canvas{flex:1 1 auto;min-height:0}html .mgrid figcaption{flex:none}
 html .wrap h2 .ib,html .wrap .iirow .ib,html .wrap .footbar .ib,html .wrap .vh .ib{translate:0 -1.5px}
 html .sphp>.ptag{padding-right:118px}
+
+:where(button,[role=button],[role=tab],[role=radio],.chip,.act,.icon,.mode,.tab,.ib,.erow,summary,h3.sph,.tpin,.pdh,.brand){-webkit-tap-highlight-color:transparent;transition-property:transform,box-shadow,background-color,color,border-color,opacity;transition-duration:var(--d-1);transition-timing-function:var(--ease-out)}
+html .prs{box-shadow:inset 0 0 0 999px color-mix(in srgb,var(--acc) 26%,transparent)!important;border-color:var(--acc)!important;transform:scale(.95)!important;transition-duration:0s!important}
+html .prs:where(.erow,summary,h3.sph,.pdh,#segTh button,.brand){transform:none!important}
+html .prs:where(.erow,summary,h3.sph,.pdh,.ib){border-color:transparent!important}
+@media (prefers-reduced-motion:reduce){html .prs{transform:none!important}}
 </style>
 
 <div class="wrap">
@@ -3286,8 +3292,8 @@ function latChart(){if(SW<=0){return}const g=gs,H=LT.hist,md=st.lat.model;g.setT
 function latNowRows(){$('nowRows').innerHTML=[['model','ln1'],['simulation time, lattice','ln2'],['total energy (start → now)','ln3'],['strings · norm · strain','ln4'],['steps per second','ln5']].map(r=>kvh(r[0],r[1])).join('')}
 function latDom(){const o=LT.obs,p=st.lat,md=p.model,nt=$('latNt');if(nt&&nt.dataset.m!==md){nt.dataset.m=md;nt.innerHTML=latNote()}setT('ln1',LATM[md].lb);setT('ln2','t = '+LT.t.toFixed(1)+' · '+LT.N+'³ '+(LT.gpu?'(WebGPU)':'(CPU)'));setT('ln3',o&&isFinite(o.E)?fr(LT.E0||o.E,1)+' → '+fr(o.E,1):md==='dirac'&&o?'∫ψ†ψ = '+fr(o.rho/(LT.rho0n||o.rho),4)+' × start':'—');
   setT('ln4',!o?'—':md==='cplx'||md==='ah'?o.str+' pierced plaquettes':md==='dirac'?'particle part '+fr(100*o.up,1)+'%'+(isFinite(o.lh)?' · left-handed '+fr(100*o.lh,1)+'%':''):md==='grav'?'GW frequency '+fr(LT.om/Math.PI,3):md==='phi4'?'wall energy '+fr(o.P,1):'—');setT('ln5',fr(RT.fps*Math.abs(p.rate/p.dt)*(st.play?st.spd:0),0));return LATM[md].lb}
-function latSlice(){const cv=$('svc'),F=fitC(cv);if(!F){return}const {g,w,h}=F;if(LT.gpu&&typeof latGpuSlice==='function'&&latGpuSlice(cv)){return}const V=LT.vis;g.fillStyle=CK.bg;g.fillRect(0,0,w,h);if(!V||V.length!==4*LT.n){return}const B=svBasis(),E=st.vw.sz,W=Math.min(200,Math.round(w/2)),H=Math.max(2,Math.round(W*h/w)),N=LT.N,hh=LT.h,off=LT.soff||(LT.soff=document.createElement('canvas'));off.width=W;off.height=H;const ox=off.getContext('2d'),img=ox.createImageData(W,H),D=img.data;
-  for(let j=0;j<H;j++){for(let i=0;i<W;i++){const u=(2*i/(W-1)-1)*E,vv=(1-2*j/(H-1))*E*H/W,p=[0,1,2].map(k=>B.c[k]+u*B.a[k]+vv*B.b[k]),ix=p.map(x=>Math.round(x/hh+N/2-.5)),k4=(j*W+i)*4;if(ix.some(q=>q<0||q>=N)){D[k4]=6;D[k4+1]=8;D[k4+2]=12;D[k4+3]=255;continue}const s=ix[0]+N*(ix[1]+N*ix[2]),a=Math.min(1,Math.sqrt(V[4*s+3])*.9);D[k4]=V[4*s]*a*255;D[k4+1]=V[4*s+1]*a*255;D[k4+2]=V[4*s+2]*a*255;D[k4+3]=255}}
+function latSlice(){const cv=$('svc'),F=fitC(cv);if(!F){return}const {g,w,h}=F;if(LT.gpu&&typeof latGpuSlice==='function'&&latGpuSlice(cv)){return}const V=LT.vis;g.fillStyle=CK.bg;g.fillRect(0,0,w,h);if(!V||V.length!==4*LT.n){return}const B=svBasis(),E=st.vw.sz,W=latSlW(w),H=Math.max(2,Math.round(W*h/w)),N=LT.N,hh=LT.h,off=LT.soff||(LT.soff=document.createElement('canvas'));off.width=W;off.height=H;const ox=off.getContext('2d'),img=ox.createImageData(W,H),D=img.data;
+  for(let j=0;j<H;j++){for(let i=0;i<W;i++){const u=(2*i/(W-1)-1)*E,vv=(1-2*j/(H-1))*E*H/W,p=[0,1,2].map(k=>(B.c[k]+u*B.a[k]+vv*B.b[k])/hh+N/2-.5),k4=(j*W+i)*4;if(p.some(q=>q<-.5||q>N-.5)){D[k4]=6;D[k4+1]=8;D[k4+2]=12;D[k4+3]=255;continue}const q=latTri(V,N,p),a=Math.min(1,Math.sqrt(Math.max(0,q[3]))*.9);D[k4]=q[0]*a*255;D[k4+1]=q[1]*a*255;D[k4+2]=q[2]*a*255;D[k4+3]=255}}
   ox.putImageData(img,0,0);g.imageSmoothingEnabled=true;g.drawImage(off,0,0,w,h);g.font='11px '+UI;g.fillStyle=CK.i(.7);g.fillText(LATM[st.lat.model].lb+' · slice',8,h-8)}
 function latNote(){const m=st.lat.model;return {phi4:'A real field with two vacua ±v. After a quench the field picks a sign in each region and domain walls form between them; the isosurface φ = 0 shows the walls.',cplx:'A complex Higgs field φ with the Mexican-hat potential λ/4(|φ|² − v²)². After a quench the phase cannot settle everywhere, so the field winds around lines where |φ| = 0: cosmic strings. Gold and blue lines mark strings with winding +1 and −1.',
   ah:'The complex Higgs coupled to a U(1) gauge field on the links. The winding of the Higgs traps quantized magnetic flux, so each string becomes a Nielsen–Olesen flux tube; flux glows gold.',em:'Pure U(1) gauge field on the links: electric fields E on links, magnetic flux in the plaquettes. An oscillating current radiates light; the edges absorb outgoing waves.',
@@ -3631,8 +3637,8 @@ const WGSL_LAS=`struct SU{c:vec4f,a:vec4f,b:vec4f,d:vec4f};
 @group(0) @binding(1) var vT:texture_3d<f32>;
 @group(0) @binding(2) var<storage,read_write> SO:array<u32>;
 @compute @workgroup_size(8,8) fn main(@builtin(global_invocation_id) g:vec3u){let W=u32(S0.d.x);let H=u32(S0.d.y);if(g.x>=W||g.y>=H){return;}let E=S0.d.z;let hh=S0.d.w;let N=i32(S0.c.w+.5);
-  let u=(2.*f32(g.x)/f32(W-1u)-1.)*E;let v=(1.-2.*f32(g.y)/f32(H-1u))*E*f32(H)/f32(W);let p=S0.c.xyz+u*S0.a.xyz+v*S0.b.xyz;let ix=vec3i(round(p/hh+vec3f(f32(N)*.5-.5)));
-  var o=vec4f(6./255.,8./255.,12./255.,1.);if(all(ix>=vec3i(0))&&all(ix<vec3i(N))){let q=textureLoad(vT,ix,0);let a=min(1.,sqrt(max(q.a,0.))*.9);o=vec4f(q.rgb*a,1.);}SO[g.y*W+g.x]=pack4x8unorm(o);}
+  let u=(2.*f32(g.x)/f32(W-1u)-1.)*E;let v=(1.-2.*f32(g.y)/f32(H-1u))*E*f32(H)/f32(W);let p=S0.c.xyz+u*S0.a.xyz+v*S0.b.xyz;let f=p/hh+vec3f(f32(N)*.5-.5);let i0=vec3i(floor(f));let t=f-floor(f);
+  var o=vec4f(6./255.,8./255.,12./255.,1.);if(all(f>=vec3f(-.5))&&all(f<=vec3f(f32(N)-.5))){var q=vec4f(0.);for(var k=0;k<8;k++){let d=vec3i(k&1,(k>>1)&1,(k>>2)&1);let ii=clamp(i0+d,vec3i(0),vec3i(N-1));let w=select(1.-t.x,t.x,d.x==1)*select(1.-t.y,t.y,d.y==1)*select(1.-t.z,t.z,d.z==1);q+=w*textureLoad(vT,ii,0);}let a=min(1.,sqrt(max(q.a,0.))*.9);o=vec4f(q.rgb*a,1.);}SO[g.y*W+g.x]=pack4x8unorm(o);}
 `;
 function latGpuReady(){return !!(GPU.on&&GPU.dev&&GPU.LA&&GPU.LA.ok)}
 function latWG(n){const g=Math.ceil(n/64);return g>65535?[65535,Math.ceil(g/65535)]:[Math.max(1,g),1]}
@@ -3653,7 +3659,7 @@ async function latGpuBuild(){const d=GPU.dev,C=GPUShaderStage.COMPUTE,VS=GPUShad
     LA.bglVo=d.createBindGroupLayout({entries:[{binding:0,visibility:C,buffer:{type:'uniform'}},{binding:1,visibility:C,texture:{sampleType:'depth',multisampled:GPU.ms>1}},{binding:2,visibility:C,storageTexture:{access:'write-only',format:'rgba16float'}},{binding:3,visibility:C,texture:{sampleType:'float',viewDimension:'3d'}},{binding:4,visibility:C,sampler:{type:'filtering'}}]});
     LA.pVo=await d.createComputePipelineAsync({layout:pl([LA.bglVo]),compute:{module:mv,entryPoint:'main'}});LA.VU=d.createBuffer({size:128,usage:BU.UNIFORM|BU.COPY_DST});LA.vuD=new Float32Array(32)}catch(err){console.warn('GPU lattice volume',err);LA.vok=false}
   try{const ms2=await chk(d.createShaderModule({code:WGSL_LAS}),'lattice slice');LA.bglSl=d.createBindGroupLayout({entries:[{binding:0,visibility:C,buffer:{type:'uniform'}},{binding:1,visibility:C,texture:{sampleType:'float',viewDimension:'3d'}},sb(2)]});
-    LA.pSl=await d.createComputePipelineAsync({layout:pl([LA.bglSl]),compute:{module:ms2,entryPoint:'main'}});LA.SU=d.createBuffer({size:64,usage:BU.UNIFORM|BU.COPY_DST});LA.SO=d.createBuffer({size:200*400*4,usage:BU.STORAGE|BU.COPY_SRC});LA.SRB=d.createBuffer({size:200*400*4,usage:BU.MAP_READ|BU.COPY_DST});LA.suD=new Float32Array(16)}catch(err){console.warn('GPU lattice slice',err)}
+    LA.pSl=await d.createComputePipelineAsync({layout:pl([LA.bglSl]),compute:{module:ms2,entryPoint:'main'}});LA.SU=d.createBuffer({size:64,usage:BU.UNIFORM|BU.COPY_DST});LA.SO=d.createBuffer({size:560*1120*4,usage:BU.STORAGE|BU.COPY_SRC});LA.SRB=d.createBuffer({size:560*1120*4,usage:BU.MAP_READ|BU.COPY_DST});LA.suD=new Float32Array(16)}catch(err){console.warn('GPU lattice slice',err)}
   LA.UB=d.createBuffer({size:256*16,usage:BU.UNIFORM|BU.COPY_DST});LA.PB=d.createBuffer({size:144,usage:BU.UNIFORM|BU.COPY_DST});LA.SG=d.createBuffer({size:LA.segCap*64,usage:BU.STORAGE});
   LA.CN=d.createBuffer({size:32,usage:BU.STORAGE|BU.INDIRECT|BU.COPY_DST|BU.COPY_SRC});LA.ICN=d.createBuffer({size:16,usage:BU.STORAGE|BU.INDIRECT|BU.COPY_DST|BU.COPY_SRC});LA.RB=d.createBuffer({size:12064,usage:BU.MAP_READ|BU.COPY_DST});
   LA.RB0=d.createBuffer({size:48,usage:BU.UNIFORM|BU.COPY_DST});LA.dum=d.createBuffer({size:64,usage:BU.STORAGE});LA.cn0=new Uint32Array([6,0,0,0,0,0,0,0]);LA.icn0=new Uint32Array([0,1,0,0]);
@@ -3710,7 +3716,7 @@ function latVolStep(enc){const g=GPU,LA=g.LA,d=g.dev,q=g.q||1,k=(window.__volK||
   const cam=GL.cam,M=new THREE.Matrix4().multiplyMatrices(cam.projectionMatrix,cam.matrixWorldInverse).invert(),u=LA.vuD,s=VV('volS',1),ex=Math.min(2,p.ex);
   u.set(M.elements,0);u.set([cam.position.x,cam.position.y,cam.position.z,cam.near,W,H,window.__volSteps||Math.round(QS(64,112)*Math.sqrt(q)),HB,Math.max(1e-6,LT.dref||.5*p.ex),Math.min(2.5,.2/Math.max(.01,LT.dmean||.3)),.55*s*ex,.5*Math.sqrt(s),g.W,g.H,LT.dthr||.35,0],16);d.queue.writeBuffer(LA.VU,0,u);
   const cp=enc.beginComputePass();cp.setPipeline(LA.pVo);cp.setBindGroup(0,LA.vbg);cp.dispatchWorkgroups(Math.ceil(W/8),Math.ceil(H/8));cp.end();return LA.VO}
-function latGpuSlice(cv){const LA=GPU.LA;if(!LA||!LA.ok||!LA.pSl||!LT.gpu){return false}const F=fitC(cv);if(!F){return false}const {g,w,h}=F,W=Math.min(200,Math.round(w/2)),H=Math.max(2,Math.min(400,Math.round(W*h/w)));LA.slReq={W,H};
+function latGpuSlice(cv){const LA=GPU.LA;if(!LA||!LA.ok||!LA.pSl||!LT.gpu){return false}const F=fitC(cv);if(!F){return false}const {g,w,h}=F,W=latSlW(w),H=Math.max(2,Math.min(2*W,Math.round(W*h/w)));LA.slReq={W,H};
   const S=LA.sl;if(!S||S.key!==LT.key){return false}const off=LT.soff||(LT.soff=document.createElement('canvas'));off.width=S.W;off.height=S.H;const ox=off.getContext('2d'),img=ox.createImageData(S.W,S.H);img.data.set(S.a);ox.putImageData(img,0,0);
   g.fillStyle=CK.bg;g.fillRect(0,0,w,h);g.imageSmoothingEnabled=true;g.drawImage(off,0,0,w,h);g.font='11px '+UI;g.fillStyle=CK.i(.7);g.fillText(LATM[st.lat.model].lb+' · slice',8,h-8);return true}
 
@@ -7347,6 +7353,15 @@ const QGTX={super:'A nucleus whose charge grows past the critical value Z ≈ 17
   if(k==='foam'&&LT.qf){const Q=LT.qf;setT('ln4','micro black holes: '+Q.bh.length+' now · '+Q.made+' formed · '+Q.gone+' evaporated')}return r};ENG.la.dom=latDom;const e0=ENG.la.hide;ENG.la.hide=function(){if(QGV.g){QGV.g.visible=false}return e0.apply(this,arguments)}}
 {const D=(k,n,mo,ini,o)=>({k,th:'la',n,f:C=>{C.state=mo;C.lat=Object.assign(latDef(),{model:mo,init:ini,dt:LATM[mo].dt,gam:0},o||{})}});
   SC.push(D('la_super','Dirac: a supercritical nucleus (Z > 173) sparks the vacuum','dirac','super',{m:.3,Z:3,ncpu:32,col:'pa',rate:8}),D('la_foam','Gravity: quantum foam, micro black holes flicker and evaporate','grav','foam',{amp:1,gam:.03,col:'heat',rate:10}));{const sc=SC[SC.length-1],f0=sc.f;sc.f=C=>{f0(C);C.vw.dist=10}}PRV.la_super=PRV.la_foam='000000000000011001011000'}
+{const PSEL='button,[role=button],[role=tab],[role=radio],[role=menuitem],.chip,.act,.icon,.mode,.tab,.ib,.erow,summary,h3.sph,.tpin,.pdh',PMIN=180;let pEl=null,pT=0,pTm=0;
+  const pOff=()=>{if(!pEl){return}const el=pEl;pEl=null;clearTimeout(pTm);pTm=setTimeout(()=>el.classList.remove('prs'),Math.max(0,PMIN-(performance.now()-pT)))};
+  const pOn=el=>{if(pEl&&pEl!==el){pEl.classList.remove('prs')}clearTimeout(pTm);pEl=el;pT=performance.now();el.classList.add('prs')};
+  document.addEventListener('pointerdown',e=>{if(e.button>0){return}const el=e.target&&e.target.closest?e.target.closest(PSEL):null;if(!el||el.disabled||el.getAttribute('aria-disabled')==='true'){return}pOn(el)},{passive:true,capture:true});
+  for(const t of ['pointerup','pointercancel','dragstart']){addEventListener(t,pOff,{passive:true,capture:true})}addEventListener('blur',e=>{if(e.target===window){pOff()}})
+  document.addEventListener('keydown',e=>{const a=document.activeElement;if((e.key==='Enter'||e.key===' ')&&a&&a.matches&&a.matches(PSEL)){pOn(a);pOff()}},true);
+  document.addEventListener('touchstart',()=>{},{passive:true})}
+function latSlW(w){const L=typeof qLv==='function'?qLv():1;if(L<=0){return Math.min(200,Math.round(w/2))}return Math.max(2,Math.min([200,240,320,400,480,560][Math.min(5,L)],Math.round(w*qDpr())))}
+function latTri(V,N,p){const o=[0,0,0,0],i0=p.map(Math.floor),t=p.map((x,k)=>x-i0[k]);for(let c=0;c<8;c++){const d=[c&1,(c>>1)&1,(c>>2)&1];let w=1;const ix=[0,0,0];for(let k=0;k<3;k++){ix[k]=Math.max(0,Math.min(N-1,i0[k]+d[k]));w*=d[k]?t[k]:1-t[k]}if(!w){continue}const s=4*(ix[0]+N*(ix[1]+N*ix[2]));o[0]+=w*V[s];o[1]+=w*V[s+1];o[2]+=w*V[s+2];o[3]+=w*V[s+3]}return o}
 const IIC={el:null,ov:null,btn:null,get:null};
 const IISVG='<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.9" r="1" fill="currentColor"/><path d="M8 7.2v4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
 function iiTxt(el){if(!el){return ''}const c=el.cloneNode(true);for(const b of c.querySelectorAll('button,.ib,.sprs')){b.remove()}return c.textContent.replace(/\s+/g,' ').trim()}

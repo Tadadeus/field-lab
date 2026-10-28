@@ -33,7 +33,7 @@ o="ta=st.alg==='fl'||"
 assert s.count(o)==1
 s=s.replace(o,"ta=st.alg==='fl'||st.alg==='cx'||")
 import os
-parts=[f for f in ['cx0.js','cx1.js','cx2.js','cx3.js','cx4.js','cx5.js','cx6.js','cx7.js','cx8.js','cx9.js','cxs.js','cxg.js','cb.js','q.js','ux.js','qg.js'] if os.path.exists(f)]
+parts=[f for f in ['cx0.js','cx1.js','cx2.js','cx3.js','cx4.js','cx5.js','cx6.js','cx7.js','cx8.js','cx9.js','cxs.js','cxg.js','cb.js','q.js','ux.js','qg.js','press.js','slice.js'] if os.path.exists(f)]
 code='\n'.join(open(f,encoding='utf8').read().strip() for f in parts)
 a='const IIC={el:null'
 assert s.count(a)==1
@@ -122,6 +122,20 @@ for a,b in P:
     s=s.replace(a,b)
 assert s.count("C.lr=0")==5
 s=s.replace("C.lr=0","C.lb=-2")
+open('Field_Lab.html','w',encoding='utf8').write(s)
+
+s=open('Field_Lab.html',encoding='utf8').read()
+P=[("const B=svBasis(),E=st.vw.sz,W=Math.min(200,Math.round(w/2)),H=Math.max(2,Math.round(W*h/w)),N=LT.N,hh=LT.h,off=LT.soff","const B=svBasis(),E=st.vw.sz,W=latSlW(w),H=Math.max(2,Math.round(W*h/w)),N=LT.N,hh=LT.h,off=LT.soff"),
+("p=[0,1,2].map(k=>B.c[k]+u*B.a[k]+vv*B.b[k]),ix=p.map(x=>Math.round(x/hh+N/2-.5)),k4=(j*W+i)*4;if(ix.some(q=>q<0||q>=N)){D[k4]=6;D[k4+1]=8;D[k4+2]=12;D[k4+3]=255;continue}const s=ix[0]+N*(ix[1]+N*ix[2]),a=Math.min(1,Math.sqrt(V[4*s+3])*.9);D[k4]=V[4*s]*a*255;D[k4+1]=V[4*s+1]*a*255;D[k4+2]=V[4*s+2]*a*255;D[k4+3]=255}}",
+ "p=[0,1,2].map(k=>(B.c[k]+u*B.a[k]+vv*B.b[k])/hh+N/2-.5),k4=(j*W+i)*4;if(p.some(q=>q<-.5||q>N-.5)){D[k4]=6;D[k4+1]=8;D[k4+2]=12;D[k4+3]=255;continue}const q=latTri(V,N,p),a=Math.min(1,Math.sqrt(Math.max(0,q[3]))*.9);D[k4]=q[0]*a*255;D[k4+1]=q[1]*a*255;D[k4+2]=q[2]*a*255;D[k4+3]=255}}"),
+("const {g,w,h}=F,W=Math.min(200,Math.round(w/2)),H=Math.max(2,Math.min(400,Math.round(W*h/w)));LA.slReq={W,H};","const {g,w,h}=F,W=latSlW(w),H=Math.max(2,Math.min(2*W,Math.round(W*h/w)));LA.slReq={W,H};"),
+("LA.SO=d.createBuffer({size:200*400*4,","LA.SO=d.createBuffer({size:560*1120*4,"),
+("LA.SRB=d.createBuffer({size:200*400*4,","LA.SRB=d.createBuffer({size:560*1120*4,"),
+("let ix=vec3i(round(p/hh+vec3f(f32(N)*.5-.5)));\n  var o=vec4f(6./255.,8./255.,12./255.,1.);if(all(ix>=vec3i(0))&&all(ix<vec3i(N))){let q=textureLoad(vT,ix,0);",
+ "let f=p/hh+vec3f(f32(N)*.5-.5);let i0=vec3i(floor(f));let t=f-floor(f);\n  var o=vec4f(6./255.,8./255.,12./255.,1.);if(all(f>=vec3f(-.5))&&all(f<=vec3f(f32(N)-.5))){var q=vec4f(0.);for(var k=0;k<8;k++){let d=vec3i(k&1,(k>>1)&1,(k>>2)&1);let ii=clamp(i0+d,vec3i(0),vec3i(N-1));let w=select(1.-t.x,t.x,d.x==1)*select(1.-t.y,t.y,d.y==1)*select(1.-t.z,t.z,d.z==1);q+=w*textureLoad(vT,ii,0);}")]
+for a,b in P:
+    assert s.count(a)==1,a[:70]
+    s=s.replace(a,b)
 open('Field_Lab.html','w',encoding='utf8').write(s)
 
 import ds,re
